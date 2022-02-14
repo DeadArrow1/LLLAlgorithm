@@ -69,53 +69,90 @@ namespace LLLAlgorithm
 
                 return vector;
             }
-
-
         }
 
 
         static void Main(string[] args)
         {
+            //2 Dimensional test values
 
-            //a 47 215
-            //b 95 460
+            //b0 47 215
+            //b1 95 460
 
-            //a 201 37
-            //b 1648 297
+            //b0 201 37
+            //b1 1648 297
+
+            //3 Dimensional test values b0= 1;1;1 b1=-1;0;2 b2=3;5;6
+            //3 Dimensional test values b0= 1;-1;1 b1=1;0;1 b2=1;1;2
+
             int k = 1;
             List<OurVector> OurWorkingVectors = new List<OurVector>();
-            OurVector a = new OurVector();
-            a.basis.Add(47);
-            a.basis.Add(215);
-
-            OurVector b = new OurVector();
-            b.basis.Add(95);
-            b.basis.Add(460);
-
-            OurWorkingVectors.Add(a);
-            OurWorkingVectors.Add(b);
-
-            
-            /*Console.WriteLine("Start bases are:        " + OurWorkingVectors[k - 1].basis[0] + "    " + OurWorkingVectors[k].basis[0]);
-            Console.WriteLine("                        " + OurWorkingVectors[k - 1].basis[1] + "    " + OurWorkingVectors[k].basis[1]);
-            Console.WriteLine();
-            Console.WriteLine();*/
-
             List<OurVector> OurGramSchmidtVectors = new List<OurVector>();
+            
+            OurWorkingVectors.Add(new OurVector());
+            OurWorkingVectors[0].basis.Add(47);
+            OurWorkingVectors[0].basis.Add(215);
+            //OurWorkingVectors[0].basis.Add(1);
 
-            OurVector ga = new OurVector();
-            ga.basis.Add(a.basis[0]);
-            ga.basis.Add(a.basis[1]);
-            OurGramSchmidtVectors.Add(ga);
 
-            OurVector gb = new OurVector();
-            gb = OurGramSchmidtReduction(b);          
-           
-            OurGramSchmidtVectors.Add(gb);
+            OurWorkingVectors.Add(new OurVector());
+            OurWorkingVectors[1].basis.Add(95);
+            OurWorkingVectors[1].basis.Add(460);
+            //OurWorkingVectors[1].basis.Add(2);
+
+            /*OurWorkingVectors.Add(new OurVector());
+            OurWorkingVectors[2].basis.Add(3);
+            OurWorkingVectors[2].basis.Add(5);
+            OurWorkingVectors[2].basis.Add(6);*/
+
+
+
+            Console.WriteLine("Our bases are:");
+            for (int i = 0; i < OurWorkingVectors.Count; i++)
+            {
+                int j = 0;
+                string vector = "";
+                while (j < OurWorkingVectors[i].basis.Count)
+                {
+                    if (j == 0)
+                    {
+                        vector = vector + OurWorkingVectors[i].basis[j].ToString();
+                    }
+                    else
+                    {
+                        vector = vector + " ; " + OurWorkingVectors[i].basis[j].ToString();
+                    }
+
+                    j++;
+                }
+                Console.WriteLine(vector);
+            }
 
             double u10;
-            Console.WriteLine(OurGramSchmidtVectors[1].basis[0]+";"+ OurGramSchmidtVectors[1].basis[1]);
+            for (int n =0; n < OurWorkingVectors.Count;n++)
+            {
+                /*if (n == 0)
+                {*/
+                    //OurGramSchmidtVectors.Add(new OurVector());
+                    //OurGramSchmidtVectors[n] = OurWorkingVectors[n];
+                /*}
+                else
+                {*/
+                    OurGramSchmidtVectors.Add(new OurVector());
+                    OurGramSchmidtVectors[n] = OurGramSchmidtReduction(OurWorkingVectors[n],n);
+                //}
+            
+            }
+            
+            /*OurGramSchmidtVectors.Add(new OurVector());
+            OurGramSchmidtVectors[0] = OurWorkingVectors[0];
 
+
+            OurGramSchmidtVectors.Add(new OurVector());
+            OurGramSchmidtVectors[1] = OurGramSchmidtReduction(OurWorkingVectors[1]);
+
+            OurGramSchmidtVectors.Add(new OurVector());
+            OurGramSchmidtVectors[2] = OurGramSchmidtReduction(OurWorkingVectors[2]);*/
 
 
 
@@ -130,7 +167,7 @@ namespace LLLAlgorithm
                 {
 
                     OurWorkingVectors[k] = OurModifyVector(OurWorkingVectors[k], OurWorkingVectors[k - 1], u10);
-                    //Console.WriteLine(OurWorkingVectors[k].basis[0]+";"+ OurWorkingVectors[k].basis[1]);
+                
                    
                 }
                 u10 = OurSizeCondition(OurWorkingVectors[k], OurGramSchmidtVectors[k - 1]);
@@ -149,11 +186,22 @@ namespace LLLAlgorithm
 
                     OurSwapWorkingVectors();
                     k = Math.Max(k - 1, 1);
-                    OurGramSchmidtVectors[0] = OurWorkingVectors[0];
-                    OurGramSchmidtVectors[1] = (OurGramSchmidtReduction(OurWorkingVectors[1]));
+                    for (int n = 0; n < OurWorkingVectors.Count; n++)
+                    {
+                        if (n == 0)
+                        {
+                            OurGramSchmidtVectors.Add(new OurVector());
+                            OurGramSchmidtVectors[n] = OurWorkingVectors[n];
+                        }
+                        else
+                        {
+                            OurGramSchmidtVectors.Add(new OurVector());
+                            OurGramSchmidtVectors[n] = OurGramSchmidtReduction(OurWorkingVectors[n], n);
+                        }
+
+                    }
                 }
-                // Console.WriteLine(OurWorkingVectors[k - 1].basis[0] + ";" + OurWorkingVectors[k - 1].basis[1]);
-                // Console.WriteLine(OurWorkingVectors[k].basis[0] + ";" + OurWorkingVectors[k].basis[1]);
+
 
             }
 
@@ -183,130 +231,18 @@ namespace LLLAlgorithm
 
             
             
-            
-            
-            //Console.WriteLine(OurWorkingVectors[k - 2].basis[0] + ";" + OurWorkingVectors[k - 2].basis[1]);
-            //Console.WriteLine(OurWorkingVectors[k-1].basis[0] + ";" + OurWorkingVectors[k-1].basis[1]);
-
-            // Console.WriteLine(OurGramSchmidtVectors[k - 2].basis[0] + ";" + OurGramSchmidtVectors[k - 2].basis[1]);
-            //Console.WriteLine(OurGramSchmidtVectors[k - 1].basis[0] + ";" + OurGramSchmidtVectors[k - 1].basis[1]);
-
-            /*Console.WriteLine("Reduced bases are: " + OurWorkingVectors[0] + " " + OurWorkingVectors[1]);
-
-            List<Vector> workingVectors = new List<Vector>();
-            workingVectors.Add(new Vector(47, 215));
-            workingVectors.Add(new Vector(95, 460));
-
-            List<Vector> GramSchmidtVectors = new List<Vector>();
-            GramSchmidtVectors.Add(workingVectors[0]);
-            GramSchmidtVectors.Add(GramSchmidtReduction(workingVectors[1]));
-            Console.WriteLine("Input bases were: " + workingVectors[0] + " " + workingVectors[1]);
-           
-
-
-
-
-
-
-           Vector b0 = new Vector(47, 215);
-            Vector b1 = new Vector(95, 460);
-
-             Vector Gb0 = new Vector(47, 215);
-            Vector Gb1 = GramSchmidtReduction(b1);
-            double u10;
-            Console.WriteLine(GramSchmidtVectors[1]);
-
-
-            //MAKING GRAM-SCHMIDTT REDUCTION
-
-
-
-
-            Vector CGb1 = Vector.Subtract(b1, Vector.Multiply(Vector.Multiply(b1, b0),b0)/Vector.Multiply(b0,b0));
-             CGb1.X = Math.Round(CGb1.X, 2);
-             CGb1.Y = Math.Round(CGb1.Y, 2);
-             Console.WriteLine(CGb1);
-             Console.WriteLine(Gb1);
-
-
-
-
-            while (k < workingVectors.Count)
-            {
-                u10 = SizeCondition(workingVectors[k], GramSchmidtVectors[k - 1]);  //b1,Gb0           
-                Console.WriteLine(u10);
-                if (u10 >= 0.5)
-                {
-                    //updating b1 vector//
-                    workingVectors[k] = ModifyVector(workingVectors[k], workingVectors[k - 1], u10);
-                    Console.WriteLine(workingVectors[k]);
-                    //b1 = Vector.Subtract(b1, Vector.Multiply(Math.Round(u10), b0));
-                }
-                //Console.WriteLine(b1);
-                //Console.WriteLine((Gb1.X * Gb1.X + Gb1.Y * Gb1.Y));
-                //Console.WriteLine((3 / 4 - u10 * u10) * Gb0.X * Gb0.X + Gb0.Y * Gb0.Y);
-                if (LovasvCondition(GramSchmidtVectors[k - 1], GramSchmidtVectors[k], u10))
-                {
-                    Console.WriteLine("true");
-                    k = k + 1;
-                    if (k >= workingVectors.Count)
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-
-                    SwapWorkingVectors();
-                    k = Math.Max(k - 1, 1);
-                    GramSchmidtVectors[0] = workingVectors[0];
-                    GramSchmidtVectors[1] = (GramSchmidtReduction(workingVectors[1]));
-                }
-
-
-
-                /*u10 = SizeCondition(b1, Gb0);
-                Console.WriteLine(u10);
-
-                if (u10 >= 0.5)
-                {
-                    /*updating b1 vector
-
-                    b1 = Modifyb1();
-                    Console.WriteLine(b1);
-                }
-                if (LovasvCondition())
-                {
-                    Console.WriteLine("true");
-                    k = k + 1;
-                }              
-
-            }
-
-
-            Console.WriteLine("Reduced bases are: " + workingVectors[0] + " " + workingVectors[1]);
-
-            */
+  
 
 
             Console.ReadKey();
 
 
-            /*double SizeCondition(Vector va, Vector vb)
-            {
-                return Math.Abs((Vector.Multiply(va, vb)) / (Vector.Multiply(vb, vb)));
-            }*/
 
             double OurSizeCondition(OurVector va, OurVector vb)
             {
                 return Math.Abs((OurVector.Multiply(va, vb)) / (OurVector.Multiply(vb, vb)));
             }
 
-            /*Vector ModifyVector(Vector vb, Vector va, double vu)
-            {
-                vb = Vector.Subtract(vb, Vector.Multiply(Math.Round(vu), va));
-                return vb;
-            }*/
 
             OurVector OurModifyVector(OurVector vb, OurVector va, double vu)
             {
@@ -314,14 +250,7 @@ namespace LLLAlgorithm
                 return vb;
             }
 
-            /*bool LovasvCondition(Vector Ga, Vector Gb, double u)
-            {
-                if ((Gb.X * Gb.X + Gb.Y * Gb.Y) >= (3 / 4 - u * u) * Ga.X * Ga.X + Ga.Y * Ga.Y)
-                {
-                    return true;
-                }
-                return false;
-            }*/
+
 
             bool OurLovasvCondition(OurVector Ga, OurVector Gb, double u)
             {
@@ -337,35 +266,45 @@ namespace LLLAlgorithm
                 return false;
             }
 
-            /*Vector GramSchmidtReduction(Vector va)
+
+            OurVector OurGramSchmidtReduction(OurVector va, int n) //https://www.youtube.com/watch?v=zHbfZWZJTGc
             {
 
-                va = Vector.Subtract(va, Vector.Multiply(Vector.Multiply(va, workingVectors[k - 1]), workingVectors[k - 1]) / Vector.Multiply(workingVectors[k - 1], workingVectors[k - 1]));
-                va.X = Math.Round(va.X, 2);
-                va.Y = Math.Round(va.Y, 2);
 
-                return va;
-            }*/
-
-            OurVector OurGramSchmidtReduction(OurVector va)
-            {
-
-                OurVector vb = OurVector.Subtract(va, OurVector.Multiply(OurVector.Multiply(va, OurGramSchmidtVectors[k - 1]), OurWorkingVectors[k - 1]) / OurVector.Multiply(OurGramSchmidtVectors[k - 1], OurGramSchmidtVectors[k - 1]));
+                OurVector suma = new OurVector();
                 for (int i = 0; i < va.basis.Count; i++)
                 {
-                    vb.basis[i] = Math.Round(vb.basis[i], 2);
+                    suma.basis.Add(va.basis[i]);
+                    
                 }
-               
+                if (n == 0)
+                {
+                    return va;
+                }
+                else
+                {
+                    for (int i = 0; i < n; i++)
+                    {
+                        double citatel = OurVector.Multiply(va, OurGramSchmidtVectors[i]);
+                        double jmenovatel = OurVector.Multiply(OurGramSchmidtVectors[i], OurGramSchmidtVectors[i]);
+                        OurVector mezivypocet = OurVector.Multiply(citatel / jmenovatel, OurGramSchmidtVectors[i]);
 
-                return vb;
+
+                        suma = OurVector.Subtract(suma, mezivypocet);
+
+                        //suma = OurVector.Subtract(suma, OurVector.Multiply(OurVector.Multiply(va, OurGramSchmidtVectors[i]), OurWorkingVectors[i]) / OurVector.Multiply(OurGramSchmidtVectors[i], OurGramSchmidtVectors[i]));
+
+                    }
+                    //OurVector vb = OurVector.Subtract(va, OurVector.Multiply(OurVector.Multiply(va, OurGramSchmidtVectors[n - 1]), OurWorkingVectors[n - 1]) / OurVector.Multiply(OurGramSchmidtVectors[n - 1], OurGramSchmidtVectors[n - 1]));
+                    for (int i = 0; i < va.basis.Count; i++)
+                    {
+                        suma.basis[i] = Math.Round(suma.basis[i], 2);
+                    }
+
+
+                    return suma;
+                }
             }
-
-            /*void SwapWorkingVectors()
-            {
-                Vector t = workingVectors[k - 1];
-                workingVectors[k - 1] = workingVectors[k];
-                workingVectors[k] = t;
-            }*/
 
             void OurSwapWorkingVectors()
             {
